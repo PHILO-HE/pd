@@ -18,6 +18,8 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"C"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
@@ -28,9 +30,21 @@ import (
 	"github.com/pingcap/pd/server/api"
 )
 
+var cmdArgsArray []string
+
+//export startServer
+func startServer(cmdArgs *C.char){
+	args:=C.GoString(cmdArgs);
+	cmdArgsArray=strings.Fields(args);
+	main()
+}
+
+
 func main() {
 	cfg := server.NewConfig()
-	err := cfg.Parse(os.Args[1:])
+	//replace os.Argsp[1:] by cmdArgsArray
+	//err := cfg.Parse(os.Args[1:])
+	err := cfg.Parse(cmdArgsArray)
 
 	if cfg.Version {
 		server.PrintPDInfo()

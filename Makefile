@@ -24,9 +24,11 @@ dev: build check test
 
 build:
 ifeq ("$(WITH_RACE)", "1")
-	GOPATH=$(VENDOR) ENABLE_CGO=1 go build -race -ldflags '$(LDFLAGS)' -o bin/pd-server cmd/pd-server/main.go
+	#GOPATH=$(VENDOR) ENABLE_CGO=1 go build -race -ldflags '$(LDFLAGS)' -o bin/pd-server cmd/pd-server/main.go  #@PHILO
+	GOPATH=$(VENDOR) ENABLE_CGO=1 go build -race -ldflags '$(LDFLAGS)' -o ./libpd.so -buildmode=c-shared cmd/pd-server/main.go #create .so file @PHILO
 else
-	GOPATH=$(VENDOR) go build  -ldflags '$(LDFLAGS)' -o bin/pd-server cmd/pd-server/main.go
+    #GOPATH=$(VENDOR) go build  -ldflags '$(LDFLAGS)' -o bin/pd-server cmd/pd-server/main.go #@PHILO
+	GOPATH=$(VENDOR) go build  -ldflags '$(LDFLAGS)' -o ./libpd.so -buildmode=c-shared cmd/pd-server/main.go #create .so file @PHILO
 endif
 	GOPATH=$(VENDOR) go build -o bin/pd-ctl cmd/pd-ctl/main.go
 	GOPATH=$(VENDOR) go build -o bin/pd-tso-bench cmd/pd-tso-bench/main.go
