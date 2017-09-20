@@ -142,6 +142,12 @@ func (s *Server) marshalLeader() string {
 	return string(data)
 }
 
+var isReady bool = false
+
+func IsPdLeaderReady() bool {
+	return isReady
+}
+
 func (s *Server) campaignLeader() error {
 	log.Debugf("begin to campaign leader %s", s.Name())
 
@@ -207,6 +213,8 @@ func (s *Server) campaignLeader() error {
 	defer s.enableLeader(false)
 
 	log.Infof("PD cluster leader %s is ready to serve", s.Name())
+
+	isReady = true
 
 	tsTicker := time.NewTicker(updateTimestampStep)
 	defer tsTicker.Stop()

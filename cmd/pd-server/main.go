@@ -33,12 +33,16 @@ import (
 var cmdArgsArray []string
 
 //export startServer
-func startServer(cmdArgs *C.char){
-	args:=C.GoString(cmdArgs);
-	cmdArgsArray=strings.Fields(args);
+func startServer(cmdArgs *C.char) {
+	args := C.GoString(cmdArgs);
+	cmdArgsArray = strings.Fields(args);
 	main()
 }
 
+//export isPdServerReady
+func isPdServerReady() bool {
+	return server.IsPdLeaderReady()
+}
 
 func main() {
 	cfg := server.NewConfig()
